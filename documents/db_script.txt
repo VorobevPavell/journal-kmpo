@@ -1,0 +1,66 @@
+create database kmpo_journal;
+use kmpo_journal;
+
+
+create table if not exists _user (
+	id int auto_increment,
+	name varchar(13),
+	constraint _user_pk primary key(id)
+);
+
+create table if not exists auth_data (
+	id int auto_increment,
+	login varchar(50),
+	passphrase varchar(50),
+	role_id int,
+	constraint auth_data_pk primary key(id),
+	constraint _user_role_fk foreign key(role_id)
+	references _user(id)
+);
+
+create table if not exists subject (
+	id int auto_increment,
+	name varchar(50),
+	constraint subject_pk primary key(id)
+);
+
+create table if not exists teacher (
+	id int auto_increment,
+	fname varchar(50),
+	mname varchar(50),
+	lname varchar(50),
+	constraint teacher_pk primary key(id)
+);
+
+create table if not exists teacher_subject (
+	id int auto_increment,
+	teacher_id int,
+	subject_id int,
+	constraint teacher_subject_pk primary key(id),
+	constraint ts_teacher_fk foreign key(teacher_id)
+	references teacher(id),
+	constraint ts_subject_fk foreign key(subject_id)
+	references subject(id)
+);
+
+create table if not exists _group (
+	id int auto_increment,
+	name varchar(20),
+	constraint _group_pk primary key(id)
+);
+
+create table if not exists schedule (
+	id int auto_increment,
+	_date date,
+	num int,
+	group_id int,
+	teacher_id int,
+	subject_id int,
+	constraint schedule_pk primary key(id),
+	constraint schedule_teacher_fk foreign key(teacher_id)
+	references teacher(id),
+	constraint schedule_subject_fk foreign key(subject_id)
+	references subject(id),
+	constraint schedule_group_fk foreign key(group_id)
+	references _group(id)
+);
